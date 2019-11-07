@@ -1,18 +1,11 @@
 ﻿using System.Web;
 using System.Net;
 
-
 namespace WebVideoDownloader
 {
-    public class Utilities
+    class Utilities
     {
-        public string DecodeUrlString(string url)
-        {
-            string newUrl = HttpUtility.UrlDecode(url);
-
-            return newUrl;
-        }
-        public string GetSource(string link) //constructor
+        public static string GetPageSource(string link) //constructor
         {
             WebRequest Request = WebRequest.Create(link);
             WebResponse Response = Request.GetResponse();
@@ -20,7 +13,8 @@ namespace WebVideoDownloader
             string pagesource = sr.ReadToEnd();
             return pagesource;
         }
-        public string RemoveInvalidChar(string txt, string domain)
+
+        public static string RemoveInvalidChar(string txt, string domain)
         {
             if (domain == "youtube")
             {

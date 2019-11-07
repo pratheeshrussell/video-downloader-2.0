@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-
 using System.Net;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -95,8 +94,7 @@ namespace WebVideoDownloader
             int nread = 0;
             int speedread = 0;
             CurrentSpeed = -1;
-            int percent = 0;
-
+            int percent;
             do
             {
                 if (Cancel_work == true)
