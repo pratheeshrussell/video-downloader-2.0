@@ -10,7 +10,11 @@ namespace WebVideoDownloader
 {
     public class DownloadFile
     {
+        private string[] MultipleLinks;
         private string DownloadURI;
+        private int TotNoOfFiles = 1;
+        private int NoOfFiles = 1;
+        private bool MultipleDownload = false;
         private string Filename;
 
         public ProgressBar progressbarname = null;
@@ -34,7 +38,14 @@ namespace WebVideoDownloader
         private string nl = System.Environment.NewLine;
         public DownloadFile(string linktoDownload, string savename) //constructor
         {
-            DownloadURI = linktoDownload;
+            MultipleLinks = linktoDownload.Split(';');
+            DownloadURI = MultipleLinks[0];
+            TotNoOfFiles = MultipleLinks.Length;
+            NoOfFiles = MultipleLinks.Length - 1;
+            if (TotNoOfFiles > 1)
+            {
+                MultipleDownload = true;
+            }
             Filename = savename;
         }
 
@@ -53,30 +64,34 @@ namespace WebVideoDownloader
             {
                 SavePath = saveFileDialog1.FileName;
                 //initialize background worker
-                this.BackgroundDownloader = new BackgroundWorker();
-                this.BackgroundDownloader.DoWork += new DoWorkEventHandler(Bd_DoWork);
-                this.BackgroundDownloader.ProgressChanged += new ProgressChangedEventHandler(Bd_ProgressChanged);
-                this.BackgroundDownloader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Bd_RunWorkerCompleted);
-                this.BackgroundDownloader.WorkerReportsProgress = true;
-                this.BackgroundDownloader.WorkerSupportsCancellation = true;
-                if (!this.BackgroundDownloader.IsBusy)
-                {
-                    this.BackgroundDownloader.RunWorkerAsync();
-                }
+                BackgroundWorkerInitialization();
+            }
+        }
+        private void BackgroundWorkerInitialization()
+        {
+            this.BackgroundDownloader = new BackgroundWorker();
+            this.BackgroundDownloader.DoWork += new DoWorkEventHandler(Bd_DoWork);
+            this.BackgroundDownloader.ProgressChanged += new ProgressChangedEventHandler(Bd_ProgressChanged);
+            this.BackgroundDownloader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Bd_RunWorkerCompleted);
+            this.BackgroundDownloader.WorkerReportsProgress = true;
+            this.BackgroundDownloader.WorkerSupportsCancellation = true;
+            if (!this.BackgroundDownloader.IsBusy)
+            {
+                this.BackgroundDownloader.RunWorkerAsync();
             }
         }
 
 
         private void Bd_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            WebRequest theRequest;
-            WebResponse theresponse;
+            HttpWebRequest theRequest;
+            HttpWebResponse theresponse;
 
             try
             {
-                theRequest = HttpWebRequest.Create(DownloadURI);
-                theresponse = theRequest.GetResponse();
+                theRequest = (HttpWebRequest)WebRequest.Create(DownloadURI);
+                theRequest.AllowAutoRedirect = true;
+                theresponse = (HttpWebResponse)theRequest.GetResponse();
             }
             catch (Exception)
             {
@@ -90,7 +105,17 @@ namespace WebVideoDownloader
             }
             FileSize = theresponse.ContentLength;
             Stopwatch speedtimer = new Stopwatch();
-            FileStream writestream = new FileStream(SavePath, FileMode.Create);
+            FileStream writestream;
+            if ((MultipleDownload == false) || ((TotNoOfFiles - NoOfFiles) ==1))
+            {
+                writestream = new FileStream(SavePath, FileMode.Create);
+            }
+            else
+            {
+                writestream = new FileStream(SavePath, FileMode.Append);
+            }
+
+
             int readings = 0;
             int nread = 0;
             int speedread = 0;
@@ -146,7 +171,7 @@ namespace WebVideoDownloader
             if (DownloadProgressLabel != null)
             {
 
-                DownloadProgressLabel.Text = "Downloaded " + ((int)FileDownloaded/(1024)) + " KB of " + ((int)FileSize/ (1024)) + " KB";
+                DownloadProgressLabel.Text = "Downloaded " + ((int)FileDownloaded / (1024)) + " KB of " + ((int)FileSize / (1024)) + " KB";
             }
             if (SpeedLabel != null & CurrentSpeed != -1)
             {
@@ -164,37 +189,55 @@ namespace WebVideoDownloader
         }
         private void Bd_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (Cancel_work == true)
+            //handle multiple upload
+            if ((MultipleDownload == true) & (NoOfFiles > 0) & (Cancel_work == false))
             {
-                MessageBox.Show("Download Cancelled");
+                var arr_elem = TotNoOfFiles - NoOfFiles; //check this or else this -1
+                NoOfFiles = NoOfFiles - 1;
+                DownloadURI = MultipleLinks[arr_elem];
+                BackgroundWorkerInitialization();
+                return;
             }
             else
             {
-                MessageBox.Show("File Downloaded");
-            }
-            if (progressbarname != null)
-            {
-                progressbarname.Value = 0;
-            }
-            if (DownloadProgressLabel != null)
-            {
+                // reset variables
+                TotNoOfFiles = 1;
+                NoOfFiles = 1;
+                MultipleDownload = false;
+                Array.Clear(MultipleLinks, 0, MultipleLinks.Length);
 
-                DownloadProgressLabel.Text = "Progress:";
-            }
-            if (SpeedLabel != null & CurrentSpeed != -1)
-            {
-                SpeedLabel.Text = "Download Speed: ";
-            }
+                if (Cancel_work == true)
+                {
+                    MessageBox.Show("Download Cancelled");
+                }
+                else
+                {
+                    MessageBox.Show("File Downloaded");
+                }
+                if (progressbarname != null)
+                {
+                    progressbarname.Value = 0;
+                }
+                if (DownloadProgressLabel != null)
+                {
 
-            if (DownloadPathLabel != null)
-            {
-                DownloadPathLabel.Text = "Save to: ";
-            }
-            if (FileSizeLabel != null)
-            {
-                FileSizeLabel.Text = "File Size: ";
-            }
+                    DownloadProgressLabel.Text = "Progress:";
+                }
+                if (SpeedLabel != null & CurrentSpeed != -1)
+                {
+                    SpeedLabel.Text = "Download Speed: ";
+                }
 
+                if (DownloadPathLabel != null)
+                {
+                    DownloadPathLabel.Text = "Save to: ";
+                }
+                if (FileSizeLabel != null)
+                {
+                    FileSizeLabel.Text = "File Size: ";
+                }
+
+            }
         }
     }
 }

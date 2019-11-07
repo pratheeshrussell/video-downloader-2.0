@@ -24,7 +24,7 @@ namespace WebVideoDownloader
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void HandlesTextbox1_TextChange(object sender, EventArgs e)
@@ -36,10 +36,17 @@ namespace WebVideoDownloader
         {
             string linktext = textBox1.Text;
             string links = "";
+            listView1.Items.Clear();
             if (linktext.ToLower().Contains("/watch?v") & linktext.ToLower().Contains(".youtube"))
             {
                 YouTubeLinkExtract ytdownload = new YouTubeLinkExtract(linktext);
                 links = ytdownload.GetLinks();
+                SetLinks(links);
+            }
+            if (linktext.ToLower().Contains("/watch/") & linktext.ToLower().Contains(".metacafe"))
+            {
+                MetaCafeLinkExtract mcdownload = new MetaCafeLinkExtract(linktext);
+                links = mcdownload.GetLinks();
                 SetLinks(links);
             }
         }
@@ -78,6 +85,11 @@ namespace WebVideoDownloader
         private void button3_Click(object sender, EventArgs e)
         {
             Startdownload.Cancel_work = true;
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+           MessageBox.Show("Created by Pratheesh Russell.S",  "About:");
         }
     }
 

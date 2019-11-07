@@ -26,6 +26,9 @@ namespace WebVideoDownloader
             {
                 txt = txt.Replace("-", "");
                 txt = txt.Replace("YouTube", "");
+            }else if (domain == "metacafe")
+            {
+                
             }
             foreach (char c in System.IO.Path.GetInvalidFileNameChars())
             {
