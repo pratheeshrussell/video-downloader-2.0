@@ -16,7 +16,7 @@ namespace WebVideoDownloader
             MClink = linktext;
         }
         
-        private List<string> GetLinks()
+        public List<string> GetLinks()
         {
             
             Utilities MyUtility = new Utilities();
