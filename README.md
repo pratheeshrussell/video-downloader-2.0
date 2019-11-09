@@ -1,7 +1,6 @@
 video downloader 2.0
-A program written in C# to download videos from youtube
+A program written in C# to download videos from YouTube, Metacafe,Dailymotion & Veoh
 
-Will probably add support for daily motion, metacafe,veoh
 
 Based on my video downloader (https://github.com/pratheeshrussell/video-downloader)
 
