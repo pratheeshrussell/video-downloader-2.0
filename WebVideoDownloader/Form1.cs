@@ -30,18 +30,25 @@ namespace WebVideoDownloader
             string linktext = textBox1.Text;
             List<string> links;
             listView1.Items.Clear();
-            if (linktext.ToLower().Contains("/watch?v") & linktext.ToLower().Contains(".youtube"))
+            if (linktext.ToLower().Contains("/watch?v") & linktext.ToLower().Contains(".youtube."))
             {
                 YouTubeLinkExtract ytdownload = new YouTubeLinkExtract(linktext);
                 links = ytdownload.GetLinks();                
                 SetLinks(links);
             }
-            if (linktext.ToLower().Contains("/watch/") & linktext.ToLower().Contains(".metacafe"))
+            if (linktext.ToLower().Contains("/watch/") & linktext.ToLower().Contains(".metacafe."))
             {
                 MetaCafeLinkExtract mcdownload = new MetaCafeLinkExtract(linktext);
                links = mcdownload.GetLinks();
                SetLinks(links);
             }
+            if (linktext.ToLower().Contains("/video/") & linktext.ToLower().Contains(".dailymotion."))
+            {
+                DailyMotionLinkExtract dmdownload = new DailyMotionLinkExtract(linktext);
+                links = dmdownload.GetLinks();
+                SetLinks(links);
+            }
+
         }
         private static void SetLinks(List<string> linkList)
         {

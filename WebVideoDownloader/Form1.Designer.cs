@@ -64,7 +64,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(457, 22);
             this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "https://www.youtube.com/watch?v=nFB3VWTNyug";
+            this.textBox1.Text = "https://www.dailymotion.com/video/x7nss86";
             this.textBox1.TextChanged += new System.EventHandler(this.HandlesTextbox1_TextChange);
             // 
             // button1

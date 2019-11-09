@@ -27,6 +27,7 @@ namespace WebVideoDownloader
                 txt = txt.Replace("-", "");
                 txt = txt.Replace("YouTube", "");
             }
+            
             foreach (char c in System.IO.Path.GetInvalidFileNameChars())
             {
                 txt = txt.Replace(c.ToString(), "");

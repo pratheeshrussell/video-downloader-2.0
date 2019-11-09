@@ -37,7 +37,7 @@ namespace WebVideoDownloader
             Uri myUri = new Uri(Ytlink);
             string VideoId = HttpUtility.ParseQueryString(myUri.Query).Get("v");
 
-            string get_video_info = "http://youtube.com/get_video_info?video_id=" + VideoId + "&el=detailpage"; //&el=detailpage &sts=18205
+            string get_video_info = "http://youtube.com/get_video_info?video_id=" + VideoId + "&el=detailpage"; //&el=detailpage 
             
             string VideoInfo = MyUtility.GetSource(Ytlink);
             VideoInfo = MyUtility.DecodeUrlString(VideoInfo);
