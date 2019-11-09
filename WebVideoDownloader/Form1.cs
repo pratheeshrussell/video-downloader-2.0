@@ -48,6 +48,12 @@ namespace WebVideoDownloader
                 links = dmdownload.GetLinks();
                 SetLinks(links);
             }
+            if (linktext.ToLower().Contains("/watch/") & linktext.ToLower().Contains(".veoh."))
+            {
+                VeohLinkExtract vdownload = new VeohLinkExtract(linktext);
+                links = vdownload.GetLinks();
+                SetLinks(links);
+            }
 
         }
         private static void SetLinks(List<string> linkList)

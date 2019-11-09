@@ -8,7 +8,6 @@ namespace WebVideoDownloader
     {
         private string DMlink;
         private string title;
-        private string nl = System.Environment.NewLine;
         public DailyMotionLinkExtract(string linktext) //constructor
         {
             DMlink = linktext;
@@ -17,8 +16,7 @@ namespace WebVideoDownloader
         {
             Utilities MyUtility = new Utilities();            
             List<string> links = new List<string>();
-            Uri MainLink = new Uri(DMlink);
-            
+            Uri MainLink = new Uri(DMlink);           
             string get_video_info = "https://www.dailymotion.com/player/metadata" + MainLink.LocalPath;
             string htmltext = MyUtility.GetSource(get_video_info);
             JObject DMLinks = JObject.Parse(htmltext);
@@ -40,4 +38,4 @@ namespace WebVideoDownloader
         }
     }
 }
-}
+

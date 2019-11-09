@@ -64,6 +64,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="VeohLinkExtract.cs" />
     <Compile Include="YouTubeGenerateSig.cs" />
     <Compile Include="YoutubeGetItags.cs" />
     <Compile Include="YouTubeLinkExtract.cs" />
