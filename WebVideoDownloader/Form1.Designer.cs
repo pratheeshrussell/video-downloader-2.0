@@ -64,6 +64,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(457, 22);
             this.textBox1.TabIndex = 1;
+            this.textBox1.Text = "https://www.youtube.com/watch?v=nFB3VWTNyug";
             this.textBox1.TextChanged += new System.EventHandler(this.HandlesTextbox1_TextChange);
             // 
             // button1
@@ -214,7 +215,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(736, 559);
+            this.ClientSize = new System.Drawing.Size(739, 559);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button2);

@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Web;
-using System.Web.Script.Serialization;
 using HtmlAgilityPack;
-using System.Windows.Forms;
 using System.Linq;
-using Newtonsoft;
-using Microsoft.CSharp;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
@@ -21,23 +15,19 @@ namespace WebVideoDownloader
         {
             MClink = linktext;
         }
-        public string GetLinks()
-        {
-            Utilities GetSourceUtility = new Utilities();
-            string source = GetSourceUtility.GetSource(MClink);
-            return ParseLinks(source);
-        }
-        private string ParseLinks(string htmltext)
+        
+        private List<string> GetLinks()
         {
             
             Utilities MyUtility = new Utilities();
-
+            string htmltext = MyUtility.GetSource(MClink);
+            
             HtmlAgilityPack.HtmlDocument htmldoc = new HtmlAgilityPack.HtmlDocument();
             htmldoc.LoadHtml(htmltext);
-            string links = "";
+            List<string> links = new List<string>();
             string Jstext = "";
-            TextBox multiline = new TextBox();
-            multiline.Multiline = true;
+            //TextBox multiline = new TextBox(); //remove this
+           // multiline.Multiline = true;
             title = htmldoc.DocumentNode.SelectSingleNode("//head/title").InnerText.ToString();
             title = MyUtility.RemoveInvalidChar(title, "metacafe");
             HtmlNodeCollection allnodes = htmldoc.DocumentNode.SelectNodes("//script[@id='json_video_data']");
@@ -50,10 +40,11 @@ namespace WebVideoDownloader
             var Mvidurl = (string)parsed_Jstext["flashvars"]["video_url"];
             var Mvidurlalt = (string)parsed_Jstext["flashvars"]["video_alt_url"];
             //get value of src to get video quality   
+            string[] multiline;
             string source = MyUtility.GetSource(MSrc);
-            multiline.Text = source;
+            multiline = source.Split(System.Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             List<string> quality = new List<string>();
-            foreach (string line in multiline.Lines)
+            foreach (string line in multiline)
             {
                 if ((!line.Contains("#")) & (line != ""))
                 {
@@ -68,9 +59,10 @@ namespace WebVideoDownloader
             foreach (string q in quality)
             {
                 string qsource = MyUtility.GetSource(main_link+"/"+q);
-                multiline.Text = qsource;
+                string[] multiline2;
+                multiline2 = qsource.Split(System.Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 string small_links = "";
-                foreach (string line in multiline.Lines)
+                foreach (string line in multiline2)
                 {
                     if ((!line.Contains("#")) & (line != ""))
                     {
@@ -86,7 +78,7 @@ namespace WebVideoDownloader
             for (i=0;i<= (quality.Count()-1); i++)
             {
                 var qtext = quality[i].Split('_');
-                links += title + "|mp4|" + qtext[1].Replace(".m3u8", "") + "|"+ Download_links[i] + nl;
+                links.Add(title + "|mp4|" + qtext[1].Replace(".m3u8", "") + "|"+ Download_links[i]);
             }
             return links;
         }

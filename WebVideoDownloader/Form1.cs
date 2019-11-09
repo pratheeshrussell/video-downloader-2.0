@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Windows.Forms;
-using System.Diagnostics;
-using System.IO;
+
 
 namespace WebVideoDownloader
 {
@@ -35,30 +28,29 @@ namespace WebVideoDownloader
         private void button1_Click(object sender, EventArgs e)
         {
             string linktext = textBox1.Text;
-            string links = "";
+            List<string> links;
             listView1.Items.Clear();
             if (linktext.ToLower().Contains("/watch?v") & linktext.ToLower().Contains(".youtube"))
             {
                 YouTubeLinkExtract ytdownload = new YouTubeLinkExtract(linktext);
-                links = ytdownload.GetLinks();
+                links = ytdownload.GetLinks();                
                 SetLinks(links);
             }
             if (linktext.ToLower().Contains("/watch/") & linktext.ToLower().Contains(".metacafe"))
             {
                 MetaCafeLinkExtract mcdownload = new MetaCafeLinkExtract(linktext);
-                links = mcdownload.GetLinks();
-                SetLinks(links);
+               links = mcdownload.GetLinks();
+               SetLinks(links);
             }
         }
-        private static void SetLinks(string text)
+        private static void SetLinks(List<string> linkList)
         {
-            TextBox multiline = new TextBox();
-            multiline.Multiline = true;
-            multiline.Text = text;
+            //form.textBox2.Text = "";
             String[] str = new string[3];
-            foreach(string line in multiline.Lines)
+            foreach(string line in linkList)
             {
                 str = line.Split('|');
+               // form.textBox2.Text += str[3] + Environment.NewLine;
                 ListViewItem listitem = new ListViewItem(str);
                 form.listView1.Items.Add(listitem);
             }
