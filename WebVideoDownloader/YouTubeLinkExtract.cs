@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using HtmlAgilityPack;
 using System.Collections.Generic;
@@ -51,13 +51,15 @@ namespace WebVideoDownloader
                     Jstext = MyUtility.DecodeUrlString(nde.InnerText);
                     Jstext = Jstext.Replace(@"\u0026", "&").Replace("\\\"", "\"").Replace("\\/", "/");
                     Jstext = Jstext.Replace("{\"itag\"", nl + "{\"itag\"");
+
                     Jstext = Jstext.Replace("\\\\\"", "");
                     Jstext = Jstext.Replace("\\&", "&");
                     Jstext = Jstext.Replace("\"playerAds\"", nl + "\"playerAds\"");
+                    Jstext = Jstext.Replace("\"probeUrl\"", nl + "\"probeUrl\"");
                     break;
                 }
             }
-            
+            //"probeUrl"
 
             var multilines = Jstext.Split(System.Environment.NewLine.ToCharArray(),StringSplitOptions.RemoveEmptyEntries);
 
@@ -72,11 +74,17 @@ namespace WebVideoDownloader
             }
             //create json
             Jstext = Jstext.Trim();
-            Jstext = Jstext.Remove(Jstext.Length - 2, 2);
+            Jstext = Jstext.Remove(Jstext.Length - 1, 1);
             Jstext = Jstext.Replace("\"adaptiveFormats\":", "");
             Jstext = Jstext.Replace("[", "").Replace("]", "");
             //Jstext = "{\"all_links\":[" + Jstext + "]}";
-            Jstext = "[" + Jstext + "]";
+            char k = Jstext[Jstext.Length - 1];
+            if (k == '}')
+            {
+                Jstext = "[" + Jstext + "]";
+            } else {
+                Jstext = "[" + Jstext + "}]"; }
+            
             JArray parsed_Jstext = JArray.Parse(Jstext); // contains json of all links & description
 
             List<string> links = new List<string>();
